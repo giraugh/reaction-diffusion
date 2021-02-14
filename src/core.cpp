@@ -32,13 +32,13 @@ void GridData::swapGrids()
 long double GridData::laplaceA(RDConfig* config, int i, int j)
 {
     long double s = 0;
-    for (int ii = 0; ii < 3; ii++)
+    for (int di = 0; di < 3; di++)
     {
-        for (int jj = 0; jj < 3; jj++)
+        for (int dj = 0; dj < 3; dj++)
         {
-            int x = i + ii - 1;
-            int y = j + jj - 1;
-            s += data[x][y].a * config->laplaceWeights[ii][jj];
+            int x = i + di - 1;
+            int y = j + dj - 1;
+            s += data[x][y].a * config->laplaceWeights[di][dj];
         }
     }
 
@@ -48,13 +48,13 @@ long double GridData::laplaceA(RDConfig* config, int i, int j)
 long double GridData::laplaceB(RDConfig* config, int i, int j)
 {
     long double s = 0;
-    for (int ii = 0; ii < 3; ii++)
+    for (int di = 0; di < 3; di++)
     {
-        for (int jj = 0; jj < 3; jj++)
+        for (int dj = 0; dj < 3; dj++)
         {
-            int x = i + ii - 1;
-            int y = j + jj - 1;
-            s += data[x][y].b * config->laplaceWeights[ii][jj];
+            int x = i + di - 1;
+            int y = j + dj - 1;
+            s += data[x][y].b * config->laplaceWeights[di][dj];
         }
     }
 
@@ -80,8 +80,8 @@ void GridData::update(RDConfig* config)
                 - (config->kill + config->feed) * b;
 
             // Update Step
-            data[i][j].a = a + deltaA * config->dt;
-            data[i][j].b = b + deltaB * config->dt;
+            swap[i][j].a = a + deltaA * config->dt;
+            swap[i][j].b = b + deltaB * config->dt;
         }
     }
 
