@@ -29,23 +29,16 @@ void GridData::swapGrids()
     }
 }
 
-long double GridData::laplaceA(RDConfig* config, int i, int j)
+long double GridData::getCellValue(CellType cellType, int i, int j)
 {
-    long double s = 0;
-    for (int di = 0; di < 3; di++)
-    {
-        for (int dj = 0; dj < 3; dj++)
-        {
-            int x = i + di - 1;
-            int y = j + dj - 1;
-            s += data[x][y].a * config->laplaceWeights[di][dj];
-        }
+    if (cellType == CellType::A) {
+        return data[i][j].a;
+    } else {
+        return data[i][j].b;
     }
-
-    return s;
 }
 
-long double GridData::laplaceB(RDConfig* config, int i, int j)
+long double GridData::laplace(RDConfig* config, CellType cellType, int i, int j)
 {
     long double s = 0;
     for (int di = 0; di < 3; di++)
@@ -54,7 +47,8 @@ long double GridData::laplaceB(RDConfig* config, int i, int j)
         {
             int x = i + di - 1;
             int y = j + dj - 1;
-            s += data[x][y].b * config->laplaceWeights[di][dj];
+            long double val = getCellValue(cellType, x, y);
+            s += val * config->laplaceWeights[di][dj];
         }
     }
 
@@ -71,11 +65,11 @@ void GridData::update(RDConfig* config)
             long double a = data[i][j].a;
             long double b = data[i][j].b;
             long double deltaA =
-                  (config->diffA * laplaceA(config, i, j))
+                  (config->diffA * laplace(config, CellType::A, i, j))
                 - (a * b * b)
                 + (config->feed * (1 - a));
             long double deltaB =
-                  (config->diffB * laplaceB(config, i, j))
+                  (config->diffB * laplace(config, CellType::B, i, j))
                 + (a * b * b)
                 - (config->kill + config->feed) * b;
 

@@ -26,6 +26,11 @@ struct GridCell
     long double b;
 };
 
+enum CellType {
+    A,
+    B
+};
+
 class GridData
 {
     private:
@@ -38,8 +43,8 @@ class GridData
         void swapGrids();
         void print();
         void update(RDConfig* config);
-        long double laplaceA(RDConfig* config, int i, int j);
-        long double laplaceB(RDConfig* config, int i, int j);
+        long double laplace(RDConfig* config, CellType cellType, int i, int j);
+        long double getCellValue(CellType cellType, int i, int j);
 };
 
 #endif
